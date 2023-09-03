@@ -72,13 +72,14 @@ def create_user(request):
 def get_all_users(request):
     # Busque todos os usuários no banco de dados
     users = User.objects.all()
-    
+    print(users)
     # Crie uma lista de dicionários com informações sobre cada usuário
     user_list = [
         {
             'id': user.id,
             'nome': user.first_name,
             'login': user.username,
+            'adm': user.is_staff,
             # Adicione outros campos conforme necessário
         }
         for user in users
