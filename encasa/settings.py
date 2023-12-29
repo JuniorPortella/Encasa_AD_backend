@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from datetime import timedelta
 
@@ -25,6 +26,8 @@ INSTALLED_APPS = [
 	"django_extensions",
     'corsheaders',
     "core",	
+    "orcamento",
+    "placas",
 ]
 
 MIDDLEWARE = [
@@ -62,7 +65,7 @@ WSGI_APPLICATION = "encasa.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'banco_ad',
+        'NAME': 'banco_sigma',
         'USER': 'root',
         'PASSWORD': '1234',
         'HOST': 'localhost',
@@ -109,7 +112,7 @@ AUTHENTICATION_BACKENDS = [
 # JWT Authentication Configs
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=180),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": True,
@@ -135,10 +138,6 @@ SIMPLE_JWT = {
 
     "JTI_CLAIM": "jti",
 
-    "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
-    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
-    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
-
     "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainPairSerializer",
     "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
     "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
@@ -148,3 +147,7 @@ SIMPLE_JWT = {
 }
 
 CSRF_COOKIE_SECURE = not DEBUG
+
+# settings.py
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/imagens/'

@@ -37,6 +37,8 @@ def login(request):
             'result': {
                 'access_token': str(access_token),
                 'refresh_token': str(refresh),
+                'user': str(user),
+                'adm': user.is_staff
             }
         })
     else:
@@ -72,13 +74,14 @@ def create_user(request):
 def get_all_users(request):
     # Busque todos os usuários no banco de dados
     users = User.objects.all()
-    
+    print(users)
     # Crie uma lista de dicionários com informações sobre cada usuário
     user_list = [
         {
             'id': user.id,
             'nome': user.first_name,
             'login': user.username,
+            'adm': user.is_staff,
             # Adicione outros campos conforme necessário
         }
         for user in users
@@ -102,3 +105,28 @@ def excluir_user(request):
 
     # Responda com um JSON indicando sucesso
     return JsonResponse({'status': '200', 'message': 'Usuário excluído com sucesso'})
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def verifica_token(request):
+    # Se chegou até aqui, o token é válido
+    return JsonResponse({'message': 'Token válido'}, status = 200)
+
+
+@permission_classes([])
+def renova_token(request):
+    corpo = json.loads(request.body)
+    refresh_token = corpo['refreshToken']
+    print(refresh_token)
+    try:
+        # Tente verificar e obter um novo token de acesso
+        refresh = RefreshToken(refresh_token)
+        access_token = refresh.access_token
+        return JsonResponse({
+            'status': '200',
+            'result': {
+                'access_token': str(access_token),
+            }
+        })
+    except Exception as e:
+        return JsonResponse({'detail': 'Erro ao renovar o token'}, status=401)
